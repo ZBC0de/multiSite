@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie 🔎</title>
+</head>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    if(sessionStorage.getItem('access') === 'true'){
+        console.log('Success');
+    }else{
+        let redirect = 'http://10.10.42.4/signup.html';
+        alert('Access denied');
+        window.location.href = redirect;
+    }
+</script>
+
+
+
+<body>
+<a href="index.html"><div id="home"><img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" height="75px" width="75px"></div></a>
+<div id="inputCenter"><input type="string" class="input" id="input" placeholder="MOVIE TITLE">
+    <button class="input" id="button" onclick="webSocket.emit('js', JSON.stringify({type:'getMovieDetails', data:document.getElementById('input').value}))">SEARCH</button></div>
+
+<div id="movie">
+    <div id="currentSearch">ENTER MOVIE NAME</div>
+    <div class="dataCarrier" id="Title"></div>
+    <div class="dataCarrier" id="Image">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Black_colour.jpg" id="img" height="500px" width="350px">
+    </div>
+    <div class="dataCarrier" id="releaseDate"></div>
+    <div class="dataCarrier" id="Rating"></div>
+</div>
+
+<footer>©Zach 2022</footer>
+
+<script>
+    let webSocket = io.connect(location.host)
+    let msg
+
+    webSocket.on('html', function(data) {
+        try {
+            msg = JSON.parse(data);
+            console.log(msg);
+
+            switch (msg.type) {
+                case 'assignMovie':
+                    console.log(msg);
+                    let test = JSON.parse(msg.data);
+                    console.log(test);
+                    let title = 'Title: ' + test.results[1].original_title
+                    let imageLink = `https://image.tmdb.org/t/p/w500${test.results[1].poster_path}`
+                    let releaseDate = 'Release Date: ' + test.results[1].release_date
+                    let rating = 'Rating: ' + test.results[1].vote_average
+                    document.getElementById('currentSearch').innerHTML=document.getElementById('input').value
+                    document.getElementById('Title').innerHTML=title
+                    document.getElementById('img').src=imageLink
+                    document.getElementById('releaseDate').innerHTML=releaseDate
+                    document.getElementById('Rating').innerHTML=rating
+                    break;
+                default:
+                    break;
+            }
+        } catch (ex) {
+
+        }
+    })
+
+
+
+</script>
+</body>
+<style>
+
+    footer{
+        position: fixed;
+        bottom: 5px;
+        text-align: center;
+        width: 100%;
+        background-color: #fda401;
+        color: #161616;
+        font-size: 12px;
+        padding: 20px 20px;
+    }
+
+    body{
+        background-image:url('https://c.tenor.com/ju5hhb03JgIAAAAC/dark.gif');
+        background-size: cover;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+        font-family: monospace;
+    }
+
+
+    #home{
+        background-color: #fda401;
+    }
+
+    #inputCenter{
+        background-color: #161616;
+        position: relative;
+        margin: auto;
+        width: fit-content;
+        border: 3px solid orange;
+        padding: 10px;
+        top: 50px;
+
+    }
+    .input{
+
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+        font-size: 25px;
+    }
+
+    #movie {
+        position: relative;
+        margin: auto;
+        border: 5px solid orange;
+        width: 90%;
+        top: 100px;
+        text-align: center;
+        padding: 10px;
+        font-size: 50px;
+        color: white;
+        background-color: transparent;
+    }
+
+    #button:hover{
+        border: 3px solid orange;
+    }
+
+    ::placeholder {
+        color: white;
+    }
+
+    .dataCarrier {
+        position: relative;
+        margin: auto;
+        width: fit-content;
+        height: fit-content;
+        border: 3px solid orange;
+        background-color: #161616;
+        color: white;
+        overflow: hidden;
+
+    }
+
+    #currentSearch {
+        position: relative;
+        font-family: monospace;
+        margin:auto;
+        font-size: 50px;
+        text-align: center;
+    }
+
+
+</style>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number To Words</title>
+</head>
+<script type="text/javascript" src="onscan.min.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="numeral.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    if(sessionStorage.getItem('access') === 'true'){
+        console.log('Success');
+    }else{
+        let redirect = 'http://10.10.42.4/signup.html';
+        alert('Access denied');
+        window.location.href = redirect;
+    }
+</script>
+
+
+
+<body>
+<a href="index.html"><div id="home"><img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" height="75px" width="75px"></div></a>
+<div id="inputCenter"><input type="number" class="input" id="input" placeholder="NUMBER">
+    <button class="input" id="button" onclick="webSocket.emit('js', JSON.stringify({type:'takeNum', data:document.getElementById('input').value}))">SUBMIT</button></div>
+
+<div id="number">ENTER-NUMBER-ABOVE</div>
+
+<footer>©Zach 2022</footer>
+
+<script>
+    let webSocket = io.connect(location.host)
+    let msg
+
+    webSocket.on('html', function(data) {
+        try {
+            msg = JSON.parse(data);
+
+            switch (msg.type) {
+                case 'assignWord':
+
+                    document.getElementById('number').innerHTML = msg.data;
+
+                    break;
+                default:
+                    break;
+            }
+        } catch (ex) {
+
+        }
+    })
+
+</script>
+</body>
+<style>
+
+    footer{
+        position: fixed;
+        bottom: 5px;
+        text-align: center;
+        width: 100%;
+        background-color: #fda401;
+        color: #161616;
+        font-size: 12px;
+        padding: 20px 20px;
+    }
+
+    body{
+        background-image:url('https://c.tenor.com/ju5hhb03JgIAAAAC/dark.gif');
+        background-size: cover;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+        font-family: monospace;
+    }
+
+
+    #home{
+        background-color: #fda401;
+    }
+
+    #inputCenter{
+        background-color: #161616;
+        position: relative;
+        margin: auto;
+        width: fit-content;
+        border: 3px solid orange;
+        padding: 10px;
+        top: 100px;
+
+    }
+    .input{
+
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+        font-size: 25px;
+    }
+
+    #number {
+
+        position: relative;
+        margin: auto;
+        border: 5px solid orange;
+        width: 90%;
+        top: 300px;
+        text-align: center;
+        padding: 10px;
+        font-size: 100px;
+        color: white;
+        background-color: black;
+    }
+
+    #button:hover{
+        border: 3px solid orange;
+    }
+
+    ::placeholder {
+        color: white;
+    }
+
+</style>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>☀️Weather</title>
+</head>
+<script type="text/javascript" src="onscan.min.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="numeral.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    if(sessionStorage.getItem('access') === 'true'){
+        console.log('Success');
+    }else{
+        let redirect = 'http://10.10.42.4/signup.html';
+        alert('Please Login...');
+        window.location.href = redirect;
+    }
+</script>
+
+
+<body>
+<a href="index.html"><div id="home"><img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" height="75px" width="75px"></div></a>
+<div id="inputCenter"><input type="string" class="input" id="input" placeholder="ZIPCODE">
+    <button class="input" id="button" onclick="webSocket.emit('js', JSON.stringify({type:'getWeatherData', data:document.getElementById('input').value}))">SUBMIT</button></div>
+
+<div id="weather">
+    <div id="currentZip">ENTER ZIP CODE</div>
+    <div class="dataCarrier" id="location"></div>
+    <div class="dataCarrier" id="forecast"></div>
+    <div class="dataCarrier" id="currentWeather"></div>
+    <div class="dataCarrier" id="winds"></div>
+</div>
+
+<footer>©Zach 2022</footer>
+
+<script>
+    let webSocket = io.connect(location.host)
+    let msg
+
+    webSocket.on('html', function(data) {
+        try {
+            msg = JSON.parse(data);
+            console.log(msg);
+
+            switch (msg.type) {
+                case 'assignWeather':
+                    console.log(msg);
+                    let test = JSON.parse(msg.data);
+                    let lon = test.coord.lon;
+                    let lat = test.coord.lat;
+                    let minTemp = test.main.temp_min;
+                    let maxTemp = test.main.temp_max;
+                    let temp = test.main.temp;
+                    minTemp = Math.round(((minTemp - 273.15)*1.8) + 32);
+                    maxTemp = Math.round(((maxTemp - 273.15)*1.8) + 32);
+                    temp = Math.round(((temp - 273.15)*1.8) + 32);
+                    let location = ('Location| ' +  ' Long: ' + lon + '°N' + ' Lat: ' + lat + '°W');
+                    let forecast = 'Forecast| ' + 'High: ' + maxTemp + ' Low: ' + minTemp;
+                    let currentWeather = 'Current| ' + 'Temp: ' + temp + ' Humidity: ' + test.main.humidity + '% ' + 'Conditions: ' + test.weather[0].description;
+                    let winds = 'Winds| ' +  'Speed: ' + test.wind.speed + ' Gusts: ' + test.wind.gust;
+                    document.getElementById('currentZip').innerHTML = document.getElementById('input').value + ', ' + test.name + ', ' + test.sys.country;
+                    document.getElementById('location').innerHTML = location;
+                    document.getElementById('forecast').innerHTML = forecast;
+                    document.getElementById('currentWeather').innerHTML = currentWeather;
+                    document.getElementById('winds').innerHTML = winds;
+
+                    break;
+                default:
+                    break;
+            }
+        } catch (ex) {
+
+        }
+    })
+
+
+
+</script>
+</body>
+<style>
+
+    footer{
+        position: fixed;
+        bottom: 5px;
+        text-align: center;
+        width: 100%;
+        background-color: #fda401;
+        color: #161616;
+        font-size: 12px;
+        padding: 20px 20px;
+    }
+
+    body{
+        background-image:url('https://c.tenor.com/ju5hhb03JgIAAAAC/dark.gif');
+        background-size: cover;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+        font-family: monospace;
+    }
+
+
+    #home{
+        background-color: #fda401;
+    }
+
+    #inputCenter{
+        background-color: #161616;
+        position: relative;
+        margin: auto;
+        width: fit-content;
+        border: 3px solid orange;
+        padding: 10px;
+        top: 100px;
+
+    }
+    .input{
+
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+        font-size: 25px;
+    }
+
+    #weather {
+        position: relative;
+        margin: auto;
+        border: 5px solid orange;
+        width: 90%;
+        top: 300px;
+        text-align: center;
+        padding: 10px;
+        font-size: 50px;
+        color: white;
+        background-color: black;
+    }
+
+    #button:hover{
+        border: 3px solid orange;
+    }
+
+    ::placeholder {
+        color: white;
+    }
+
+    .dataCarrier {
+        position: relative;
+        margin: auto;
+        width: fit-content;
+        height: fit-content;
+        border: 3px solid orange;
+        background-color: #161616;
+        color: white;
+
+    }
+
+    #currentZip {
+        position: relative;
+        font-family: monospace;
+        margin:auto;
+        font-size: 50px;
+        text-align: center;
+    }
+
+
+</style>
+</html>
