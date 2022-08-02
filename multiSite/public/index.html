@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🏠 Home</title>
+</head>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    if(sessionStorage.getItem('access') === 'true'){
+        console.log('Success');
+    }else{
+        let redirect = 'http://zbwebdesign.com/signup.html';
+        alert('Access denied');
+        window.location.href = redirect;
+    }
+</script>
+<body>
+
+<div id="selectionBox" >
+    <div class="button"><a href="numToWords.html">numToWords</a></div>
+    <div class="button"><a href="julianDate.html">julianDate</a></div>
+    <div class="button"><a href="weather.html">weather</a></div>
+    <div class="button"><a href="osInfo.html">osInfo</a></div>
+    <div class="button"><a href="movieSearch.html">movieSearch</a></div>
+    <div class="button"><a href="chat.html">chat</a></div>
+    <div class="button"><a href="math.html">math</a></div>
+    <div class="button"><a href="profile.html">profile</a></div>
+    <div class="button">N/A</div>
+    <div class="button">N/A</div>
+    <div class="button">N/A</div>
+    <div class="button">N/A</div>
+    <div class="button">N/A</div>
+    <div class="button">N/A</div>
+    <div class="button">N/A</div>
+    <div class="button">N/A</div>
+</div>
+<div id="clock"></div>
+<footer>©Zach 2022</footer>
+
+<script>
+    function time(){
+        // Creating object of the Date class
+        let date = new Date();
+        // Get current hour
+        let hour = date.getHours();
+        // Get current minute
+        let minute = date.getMinutes();
+        // Get current second
+        let second = date.getSeconds();
+        // Variable to store AM / PM
+        let period = "";
+        // Assigning AM / PM according to the current hour
+        if (hour >= 12) {
+            period = "PM";
+        } else {
+            period = "AM";
+        }
+        // Converting the hour in 12-hour format
+        if (hour === 0) {
+            hour = 12;
+        } else {
+            if (hour > 12) {
+                hour = hour - 12;
+            }
+        }
+        // Updating hour, minute, and second
+        // if they are less than 10
+        hour = update(hour);
+        minute = update(minute);
+        second = update(second);
+        // Adding time elements to the div
+        document.getElementById("clock").innerHTML = hour + " : " + minute + " : " + second + " " + period;
+        // Set Timer to 1 sec (1000 ms)
+        setTimeout(time, 1000);
+    }
+    // Function to update time elements if they are less than 10
+    // Append 0 before time elements if they are less than 10
+    function update(t) {
+        if (t < 10) {
+            return "0" + t;
+        }
+        else {
+            return t;
+        }
+    }
+    time()
+</script>
+
+</body>
+
+<style>
+
+    footer{
+        position: fixed;
+        bottom: 5px;
+        text-align: center;
+        width: 100%;
+        background-color: #fda401;
+        color: #161616;
+        font-size: 12px;
+        padding: 20px 20px;
+    }
+
+    body{
+        background-image:url('https://c.tenor.com/ju5hhb03JgIAAAAC/dark.gif');
+        background-size: cover;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+        font-family: monospace;
+        overflow: hidden;
+    }
+
+
+    #selectionBox {
+        margin: auto;
+        position: sticky;
+        border: 3px solid orange;
+        height: 100px;
+        background-color: #161616;
+        overflow: hidden;
+
+    }
+
+    #clock {
+        position: relative;
+        text-align: center;
+        top: 100px;
+        margin: auto;
+        border: 3px solid orange;
+        background-color: #161616;
+        color: white;
+        width: 50%;
+        height: 125px;
+        font-size: 100px;
+    }
+
+    .button {
+        margin-left: 15px;
+        margin-top: 10px;
+        position: relative;
+        float: left;
+        background-color: black;
+        font-size: 25px;
+        border: 3px solid orange;
+        color: white;
+    }
+    .button:hover {
+        border-color: #fd6a01;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+    }
+
+</style>
+</html>

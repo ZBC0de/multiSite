@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math 🖩</title>
+</head>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    if(sessionStorage.getItem('access') === 'true'){
+        console.log('Success');
+    }else{
+        let redirect = 'http://zbwebdesign.com/signup.html';
+        alert('Access denied');
+        window.location.href = redirect;
+    }
+</script>
+<body>
+
+<a href="index.html"><div id="home"><img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" height="75px" width="75px"></div></a>
+<header>@Zach 2022</header>
+<div id="inputField">
+    <input type="number" class="numInput" id="num1" placeholder="Number One">
+    <input type="number" class="numInput" id="num2" placeholder="Number Two">
+    <div class="functionButton" style="cursor: pointer" onclick="webSocket.emit('js', JSON.stringify({type:'math', n1:document.getElementById('num1').value, n2:document.getElementById('num2').value, sym:'+'}))">Add</div>
+    <div class="functionButton" style="cursor: pointer" onclick="webSocket.emit('js', JSON.stringify({type:'math', n1:document.getElementById('num1').value, n2:document.getElementById('num2').value, sym:'-'}))">Subtract</div>
+    <div class="functionButton" style="cursor: pointer" onclick="webSocket.emit('js', JSON.stringify({type:'math', n1:document.getElementById('num1').value, n2:document.getElementById('num2').value, sym:'*'}))">Multiply</div>
+    <div class="functionButton" style="cursor: pointer" onclick="webSocket.emit('js', JSON.stringify({type:'math', n1:document.getElementById('num1').value, n2:document.getElementById('num2').value, sym:'/'}))">Divide</div>
+    <div class="functionButton" style="cursor: pointer" onclick="webSocket.emit('js', JSON.stringify({type:'math', n1:document.getElementById('num1').value, n2:document.getElementById('num2').value, sym:'**'}))">Exponent</div>
+    <div class="functionButton" style="cursor: pointer" onclick="webSocket.emit('js', JSON.stringify({type:'math', n1:document.getElementById('num1').value, n2:document.getElementById('num2').value, sym:'%'}))">Modulo</div>
+    <div id="resultBox">RESULT</div>
+</div>
+
+<script>
+    let webSocket = io.connect(location.host);
+    let msg;
+
+    webSocket.on('html', function(data) {
+        try {
+            msg = JSON.parse(data);
+            console.log(msg);
+
+            switch (msg.type) {
+                case 'result':
+                    document.getElementById('resultBox').innerHTML = msg.result;
+
+
+                    break;
+                default:
+                    break;
+            }
+        } catch (ex) {
+
+        }
+    })
+</script>
+</body>
+<style>
+
+    #home{
+        background-color: #fda401;
+    }
+
+    body{
+        background-image:url('https://c.tenor.com/ju5hhb03JgIAAAAC/dark.gif');
+        background-size: cover;
+        height: 100px;
+        padding: 0;
+        margin: 0;
+        font-family: monospace;
+    }
+
+    #inputField{
+        position: relative;
+        margin: auto;
+        background-color: #fda401;
+        width: fit-content;
+        height: 500px;
+        top: 100px;
+        border: 3px solid #fda401;
+    }
+
+    .numInput{
+        position: relative;
+        top: 10px;
+        background-color: #161616;
+        color: white;
+        font-size: 25px;
+    }
+
+    .functionButton{
+        position: relative;
+        margin: auto;
+        border: 3px solid #161616;
+        margin-top: 25px;
+        width: fit-content;
+        height: fit-content;
+        color: white;
+        font-size: 25px;
+        background-color: #161616;
+    }
+
+    header{
+        position: fixed;
+        text-align: center;
+        text-indent: -180px;
+        top: 0;
+        left: 80px;
+        width: 100%;
+        height: 50px;
+        background-color: #fda401;
+        color: #161616;
+        font-size: 12px;
+        padding-top: 25px;
+    }
+
+    #resultBox{
+        position: relative;
+        margin: auto;
+        margin-top: 35px;
+        border: 3px solid #161616;
+        background-color: #161616;
+        color: white;
+        width: fit-content;
+        height: fit-content;
+        font-size: 40px;
+    }
+
+    ::placeholder{
+        color: white;
+        font-size: 25px;
+    }
+</style>
+</html>
